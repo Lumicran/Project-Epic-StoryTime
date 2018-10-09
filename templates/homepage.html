@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Epic StoryTime{% endblock %}
+
+{% block content %}
+
+<h1>Register</h1>
+<p><a href="/register">Register Here</a></p>
+
+{% if 'active_session' in session %}
+    <h2>Logout</h2>
+    <p><a href="/logout">Click here to log out</a></p>
+{% else %}
+    <h2>Login</h2>
+    <p><a href="/login">Click here to log in</a></p>
+{% endif %}
+
+{% endblock %}
