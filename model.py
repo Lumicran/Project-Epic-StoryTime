@@ -39,12 +39,12 @@ class GameMaster(db.Model):
     created_games = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
     #Define relationship to User
-    user = db.relationship("User", 
-                            backref=db.backref("users"))
+    # user = db.relationship("User", 
+    #                         backref=db.backref("users"))
 
     #Define relationship to Games
-    game = db.relationship("Game",
-                            backref=db.backref("games"))
+    # game = db.relationship("Game",
+    #                         backref=db.backref("games"))
 
     def __repr__(self):
         return f"<gm_id: {gm_id} \n user_id: {user_id} \n created_games: {created_games}>"
@@ -56,17 +56,17 @@ class Player(db.Model):
     __tablename__ = "players"
 
     player_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     games_played = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
     games_not_played = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
     #Define relationship to User
-    user = db.relationship("User", 
-                            backref=db.backref("users"))
+    # user = db.relationship("User", 
+    #                         backref=db.backref("users"))
 
     #Define relationship to Games
-    game = db.relationship("Game",
-                            backref=db.backref("games"))
+    # game = db.relationship("Game",
+    #                         backref=db.backref("games"))
 
     def __repr__(self):
         return f"<player_id: {player_id} \n user_id: {user_id} \n games_played: {created_games} \n games_not_played: {games_not_played}>"
@@ -100,16 +100,27 @@ class GameInfo(db.Model):
     weather_condition = db.Column(db.String(64), nullable=True)
 
     #Define relationship to Games
-    game = db.relationship("Game",
-                            backref=db.backref("games"))
+    # game = db.relationship("Game",
+    #                         backref=db.backref("games"))
 
 
 #Functions to connect to database.
+
+def init_app():
+    # So that we can use Flask-SQLAlchemy, we'll make a Flask app.
+    from flask import Flask
+    app = Flask(__name__)
+
+    connect_to_db(app)
+    print("Connected to DB.")
+
+
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///storytime'
+    app.config['SQLALCHEMY_ECHO'] = False
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
@@ -118,8 +129,8 @@ def connect_to_db(app):
 if __name__ == "__main__":
     """Import app & connect to database as soon as file is run."""
     from server import app
-    connect_to_db(app)
-    print("Connected to DB.")
+
+    init_app()
 
 
 

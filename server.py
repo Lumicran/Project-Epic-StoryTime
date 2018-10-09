@@ -85,6 +85,8 @@ def login_check():
 def main_page():
     """Main page shown once a user logs in."""
 
+    flash("You're now logged in. Happy Gaming!")
+
     return render_template("mainpage.html")
 
 

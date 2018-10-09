@@ -1,19 +1,50 @@
 {% extends 'base.html' %}
 
-{% block title %}Main Page{% endblock %}
+{% block title %}Greeting Page{% endblock %}
 
 {% block content %}
 
-<h1>Greeting Page</h1>
-<!-- 
-  <form action="/login-check" method="GET">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-    Email: <input type='text' name='user_email'><br>
-    Password: <input type='password' name='user_password'>
 
-    <input type='submit'>
 
-  </form> -->
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-4">
+                    Username <br>
+                    _________ <br>
+                    |      <br>
+                    |      <br>
+                    |      <br>
+                    ---------- <br>
+
+                    Player Stats: <br>
+
+                    *Games Played* <br>
+                    -Rank # <br>
+
+                    *Games Created* <br>
+                    -Rank # <br>
+                </div>
+
+                <div class="col-4">
+                    Hi there! ajfk;asflk;fadsjlkfdsajklaffkfadshfajfajlafsjlasdfjlfdsajklfsadjfajklafsjklafsdjlkfsadjlfsadjklfsajklfajklfasjkfsa
+                    ahfasdkafsdjkfdsahjkfdsahjkfadshjkfdshjfhjkfhjklfas
+                    asldfhlasdhfl
+
+
+            </div>
+        </div>
+    </body>
 
 
 {% endblock %}
