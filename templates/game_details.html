@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}<h1>Game Details</h1>{% endblock %}
+
+{% block content %}
+
+  <form action="/game-details" method="POST">
+
+    Event #: <input type='number' name='event_order' min=1><br>
+    Location latitude: <input type='number' name='latitude'><br>
+    Location longitude: <input type='number' name='longitude'><br>
+    Story: <input type='text' name='story_text'><br>
+    Puzzle: <input type='text' name='puzzle'><br>
+    Puzzle Key: <input type='text' name='puzzle_key'><br>
+    Puzzle Hint: <input type='text' name='puzzle_hint'><br>
+    Weather Condition: 
+        <select name='weather_condition'>
+            <option value='no_condition'>None</option>
+            <option value='light_rain'>Light Rain</option>
+        </select>
+
+    <input type='submit' value='Submit Game Details'>
+
+  </form>
+
+{% endblock %}

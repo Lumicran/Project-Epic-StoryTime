@@ -4,22 +4,10 @@
 
 {% block content %}
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class=flashes>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-
-
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     Username <br>
                     _________ <br>
                     |      <br>
@@ -34,14 +22,22 @@
 
                     *Games Created* <br>
                     -Rank # <br>
+
                 </div>
 
-                <div class="col-4">
-                    Hi there! ajfk;asflk;fadsjlkfdsajklaffkfadshfajfajlafsjlasdfjlfdsajklfsadjfajklafsjklafsdjlkfsadjlfsadjklfsajklfajklfasjkfsa
-                    ahfasdkafsdjkfdsahjkfdsahjkfadshjkfdshjfhjkfhjklfas
-                    asldfhlasdhfl
+                <div class="col-3">
+                    <a href="/create-game">
+                        Create Games
+                    </a>
+                </div>
 
+                <div class="col-3">
+                    Play Games
+                </div>
 
+                <div class="col-3">
+                    Search Games
+                </div>
             </div>
         </div>
     </body>

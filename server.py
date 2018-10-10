@@ -81,6 +81,17 @@ def login_check():
     flash(u"No account found for the entered email/password.")
     return render_template("login.html")
 
+
+@app.route('/logout')
+def logout_page():
+    """Take user to login page."""
+
+    session.pop('active_session')
+    flash("You are now logged out.")
+
+    return redirect("/")
+
+
 @app.route('/main-page')
 def main_page():
     """Main page shown once a user logs in."""
@@ -89,7 +100,57 @@ def main_page():
 
     return render_template("mainpage.html")
 
+@app.route('/create-game')
+def create_game_page():
+    """Page shown where GM's can create a game."""
 
+    return render_template("game_creation.html")
+
+@app.route('/game-shell', methods=["POST"])
+def game_shell_creation():
+    """This gets the puzzle/game details from game_creation.html)"""
+
+    game_title = request.form.get("game_title")
+    game_info = db.session.query(Game.game_id, Game.game_name).all()
+
+    for game in game_info:
+        if game_title == game[1]:
+            flash(u"This game already exists. Please create a new game.")
+            return redirect("/create-game")
+        else:
+            #Adding game to Games table in storytime DB.
+            new_game = Game(game_name=game_title)
+            db.session.add(new_game)
+            db.session.commit()
+
+    return render_template("game_details.html")
+
+
+@app.route('/game-details', methods=["POST"])
+def get_game_details():
+    """Route to record game details for an event."""
+
+    game_description = request.form.get("game_description")
+    event_order = request.form.get("event_order")
+    latitude = request.form.get("latitude")
+    longitude = request.form.get("longitude")
+    story_text = request.form.get("story_text")
+    puzzle = request.form.get("puzzle")    
+    puzzle_key = request.form.get("puzzle_key")
+    puzzle_hint = request.form.get("puzzle_hint")
+    weather_condition = request.form.get("weather_condition")
+
+    #Query to get game ID for particular game ||||| BUILD!!!!
+    game_id = db.session.query(Game.game_id).all()
+
+    #Adding event to Game Information table.
+    game_item = GameInfo(game_id=game_id, event_order=event_order, game_description=game_description, latitude=latitude,
+                    longitude=longitude, story_text=story_text, puzzle=puzzle, puzzle_key=puzzle_key,
+                    puzzle_hint=puzzle_hint, weather_condition=weather_condition)
+    db.session.add(game_item)
+    db.session.commit()
+
+    return render_template("game_details.html") 
 
 
 

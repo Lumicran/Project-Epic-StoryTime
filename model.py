@@ -81,7 +81,7 @@ class Game(db.Model):
     game_name = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
-        return f"<game_id: {game_id} \n game_name: {game_name}>"
+        return f"<game_id: {game_id} \n game_name: {game_name} \n game_gm: {game_gm}>"
 
 
 class GameInfo(db.Model):
@@ -92,7 +92,9 @@ class GameInfo(db.Model):
     game_info_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=False)
     event_order = db.Column(db.Integer, nullable=False)
-    lat_long = db.Column(db.String(64), nullable=False)
+    game_description = db.Column(db.Text, nullable=True)
+    latitude = db.Column(db.Integer, nullable=False)
+    longitude = db.Column(db.Integer, nullable=False)
     story_text = db.Column(db.Text, nullable=False)
     puzzle = db.Column(db.Text, nullable=False)
     puzzle_key = db.Column(db.Text, nullable=False)

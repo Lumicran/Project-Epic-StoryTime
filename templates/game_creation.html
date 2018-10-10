@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}<h1>Game Creation</h1>{% endblock %}
+
+{% block content %}
+
+  <form action="/game-shell" method="POST">
+
+    Title of game: <input type='text' name='game_title'><br>
+    Game Description: <input type='text' name='game_description'><br>
+
+    <input type='submit' value='Create Game'>
+
+  </form>
+  
+<br>
+<br>
+<br>
+
+  <form>
+    Continue working on an existing game:
+
+  </form>
+
+
+{% endblock %}
