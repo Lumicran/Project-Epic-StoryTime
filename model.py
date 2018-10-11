@@ -22,7 +22,6 @@ class User(db.Model):
 #Q 1: Add a user image to the table (profile picture)
     # user_image = db.Column(db.)
 
-
     def __repr__(self):
         """Provide helpful representatble when printed."""
 
@@ -38,14 +37,6 @@ class GameMaster(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     created_games = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
-    #Define relationship to User
-    # user = db.relationship("User", 
-    #                         backref=db.backref("users"))
-
-    #Define relationship to Games
-    # game = db.relationship("Game",
-    #                         backref=db.backref("games"))
-
     def __repr__(self):
         return f"<gm_id: {gm_id} \n user_id: {user_id} \n created_games: {created_games}>"
 
@@ -60,14 +51,6 @@ class Player(db.Model):
     games_played = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
     games_not_played = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
-    #Define relationship to User
-    # user = db.relationship("User", 
-    #                         backref=db.backref("users"))
-
-    #Define relationship to Games
-    # game = db.relationship("Game",
-    #                         backref=db.backref("games"))
-
     def __repr__(self):
         return f"<player_id: {player_id} \n user_id: {user_id} \n games_played: {created_games} \n games_not_played: {games_not_played}>"
 
@@ -79,9 +62,10 @@ class Game(db.Model):
 
     game_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     game_name = db.Column(db.String(64), nullable=False)
+    game_description = db.Column(db.Text, nullable=True)
 
-    def __repr__(self):
-        return f"<game_id: {game_id} \n game_name: {game_name} \n game_gm: {game_gm}>"
+    # def __repr__(self):
+    #     return f"<game_id: {game_id} \n game_name: {game_name} \n game_gm: {game_gm}>"
 
 
 class GameInfo(db.Model):
@@ -92,7 +76,6 @@ class GameInfo(db.Model):
     game_info_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     game_id = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=False)
     event_order = db.Column(db.Integer, nullable=False)
-    game_description = db.Column(db.Text, nullable=True)
     latitude = db.Column(db.Integer, nullable=False)
     longitude = db.Column(db.Integer, nullable=False)
     story_text = db.Column(db.Text, nullable=False)
@@ -100,11 +83,6 @@ class GameInfo(db.Model):
     puzzle_key = db.Column(db.Text, nullable=False)
     puzzle_hint = db.Column(db.Text, nullable=True)
     weather_condition = db.Column(db.String(64), nullable=True)
-
-    #Define relationship to Games
-    # game = db.relationship("Game",
-    #                         backref=db.backref("games"))
-
 
 #Functions to connect to database.
 

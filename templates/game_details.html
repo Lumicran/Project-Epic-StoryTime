@@ -4,6 +4,10 @@
 
 {% block content %}
 
+    <a href="/main-page">Main Page</a>
+    <p>Current Game: ({{ game_id }}) {{ game_name }} </p><br>
+
+Add game events:
   <form action="/game-details" method="POST">
 
     Event #: <input type='number' name='event_order' min=1><br>
@@ -18,6 +22,7 @@
             <option value='no_condition'>None</option>
             <option value='light_rain'>Light Rain</option>
         </select>
+    <br>
 
     <input type='submit' value='Submit Game Details'>
 

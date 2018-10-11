@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}<h1>Game Page</h1>{% endblock %}
+
+{% block content %}
+
+<p>Current Game: ({{ game_id }}) {{ game_name }} </p><br>
+
+    <p>Game events in game:</p>
+    {% for event in game_details %}
+        Event #: {{ event.event_order }} | Story Text: {{ event.story_text }} | Puzzle: {{ event.puzzle }}<br>
+    {% endfor %}
+
+
+<a href="/main-page">Return to main page.</a>
+
+<br>
+<br>
+
+
+{% endblock %}

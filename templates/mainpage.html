@@ -4,6 +4,14 @@
 
 {% block content %}
 
+{% if 'active_session' in session %}
+    <h2>Logout</h2>
+    <p><a href="/logout">Click here to log out</a></p>
+{% else %}
+    <h2>Login</h2>
+    <p><a href="/login">Click here to log in</a></p>
+{% endif %}
+
     <body>
         <div class="container-fluid">
             <div class="row">
@@ -27,18 +35,35 @@
 
                 <div class="col-3">
                     <a href="/create-game">
-                        Create Games
+                        Create a Game
                     </a>
                 </div>
 
                 <div class="col-3">
-                    Play Games
+                    Continue Working on an Existing Game:<br>
+
+                    {% if user_games %}
+                        {% for game in user_games %}
+                            {{ game.game_name}}<br>
+                        {% endfor %}
+                    {% else %}
+                        You have not created any games.<br>
+                    {% endif %}
                 </div>
 
-                <div class="col-3">
-                    Search Games
-                </div>
+
+
             </div>
+
+            <div class="row">
+                <div class="col-3 offset-3">
+                    Available Games to Play:<br>
+                            {% for game in all_games %}
+                                {{ game.game_name }}<br>
+                            {% endfor %}               
+                </div>                
+            </div>
+
         </div>
     </body>
 
