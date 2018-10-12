@@ -9,6 +9,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import User, GameMaster, Player, Game, GameInfo, connect_to_db, db
 
+import json
+
 
 app = Flask(__name__)
 
@@ -205,11 +207,21 @@ def show_game():
 
     game_info = db.session.query(GameInfo).filter(GameInfo.game_id == game_id).all()
 
+    # Code to pass in puzzle key as json so we can use it in JavaScript
+    puzzle_key = []
+    hints = []
+
+    for game in game_info:
+        puzzle_key.append(game.puzzle_key)
+        hints.append(game.puzzle_hint)
+
     return render_template("game.html",
                             game_id=game_id,
                             game_name=game_name,
                             game_description=game_description,
-                            game_info=game_info)
+                            game_info=game_info,
+                            puzzle_key=puzzle_key,
+                            hints=hints)
 
 
 

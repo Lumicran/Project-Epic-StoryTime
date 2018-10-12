@@ -11,32 +11,71 @@
         {% for game in game_info %}
             {% if loop.index == 1 %}
 
-                <form class='current'>
+                <form class='current' id='event{{ loop.index }}'>
                     Event # ({{ game.event_order }}) {{ game.story_text }}<br>
                     Puzzle: {{ game.puzzle }}<br>
-                    <input type='text' name='puzzle_response'>
-                    <input type='submit' value='Submit'>
+                    <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
+                    <input type='submit' value='Submit' onclick='getResponse()'><br>
+                    <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>
+
+
+
                 </form>
             {% else %}
-                <form class='current hidden'>
+                <form class='hidden' id='event{{ loop.index }}'>
                     Event # ({{ game.event_order }}) {{ game.story_text }}<br>
                     Puzzle: {{ game.puzzle }}<br>
-                    <input type='text' name='puzzle_response'>
+                    <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
+                    <input type='submit' value='Submit' onclick='getResponse()'><br>
+                    <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>          
                 </form>
-            <br>
             {% endif %}
         {% endfor %}
 </ul>
 
 <script>
-    function printSubmission (event) {
-        event.preventDefault()
-        
-        console.log(event.target)
+    let counter = 1;
+    let puzzle_index = 0;
+    let hints = 0;
+
+    function getResponse() {
+        // Prevent re-routing.
+        event.preventDefault();
+
+        // Pass in list of puzzle keys, list of puzzle hints.
+        let puzzle_key = {{ puzzle_key | safe }};
+        let hints = {{ hints | safe }};
+
+        // Take user response from text box.
+        let response = document.getElementById("response" + counter).value;
+
+        // Check if user response is same as puzzle key.
+
+        if (response === puzzle_key[puzzle_index]) {
+            // If correct, increment the puzzle key and execute class change.
+            puzzle_index += 1;
+
+            changeEvent();         
+
+        } else {
+            // If wrong, pop up hint.
+            let hint = document.getElementById("hint" + counter);
+            hint.setAttribute('class', 'hint');
+
+            console.log("Wrong answer.");
+        }
     }
 
-    let puzzle = document.querySelector('.game-events')
-    puzzle.addEventListener('click', printSubmission)
+    function changeEvent() {
+        // This line of code is to make the current event disabled.
+        $('#event' + counter).children().attr('disabled', true);
+
+        // These next lines of code are to set the next event as current.
+        next = document.getElementById('event'+ (counter + 1));
+        next.setAttribute('class', 'current');
+
+        counter += 1;
+    }
 
 
 </script>
