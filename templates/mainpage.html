@@ -27,43 +27,21 @@
 
                     *Games Played* <br>
                     -Rank # <br>
-
-                    *Games Created* <br>
-                    -Rank # <br>
-
                 </div>
 
                 <div class="col-3">
-                    <a href="/create-game">
-                        Create a Game
-                    </a>
-                </div>
-
-                <div class="col-3">
-                    Continue Working on an Existing Game:<br>
-
-                    {% if user_games %}
-                        {% for game in user_games %}
-                            {{ game.game_name}}<br>
-                        {% endfor %}
-                    {% else %}
-                        You have not created any games.<br>
-                    {% endif %}
-                </div>
-
-
-
-            </div>
-
-            <div class="row">
-                <div class="col-3 offset-3">
                     Available Games to Play:<br>
+                        <ul>
                             {% for game in all_games %}
-                                {{ game.game_name }}<br>
-                            {% endfor %}               
-                </div>                
-            </div>
-
+                                <li>
+                                    <a href="/game-page?game_name={{ game.game_name }}">
+                                        {{ game.game_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}      
+                        </ul>         
+                </div>
+            </div>                
         </div>
     </body>
 

@@ -3,19 +3,47 @@
 {% block title %}<h1>Game Page</h1>{% endblock %}
 
 {% block content %}
+<a href="/main-page">Return to main page</a>
 
-<p>Current Game: ({{ game_id }}) {{ game_name }} </p><br>
+<p>Current Game: ({{ game_id }}) {{ game_name }} ({{ game_description }})</p><br>
 
-    <p>Game events in game:</p>
-    {% for event in game_details %}
-        Event #: {{ event.event_order }} | Story Text: {{ event.story_text }} | Puzzle: {{ event.puzzle }}<br>
-    {% endfor %}
+<ul class='game-events'>
+        {% for game in game_info %}
+            {% if loop.index == 1 %}
+
+                <form class='current'>
+                    Event # ({{ game.event_order }}) {{ game.story_text }}<br>
+                    Puzzle: {{ game.puzzle }}<br>
+                    <input type='text' name='puzzle_response'>
+                    <input type='submit' value='Submit'>
+                </form>
+            {% else %}
+                <form class='current hidden'>
+                    Event # ({{ game.event_order }}) {{ game.story_text }}<br>
+                    Puzzle: {{ game.puzzle }}<br>
+                    <input type='text' name='puzzle_response'>
+                </form>
+            <br>
+            {% endif %}
+        {% endfor %}
+</ul>
+
+<script>
+    function printSubmission (event) {
+        event.preventDefault()
+        
+        console.log(event.target)
+    }
+
+    let puzzle = document.querySelector('.game-events')
+    puzzle.addEventListener('click', printSubmission)
 
 
-<a href="/main-page">Return to main page.</a>
+</script>
 
 <br>
 <br>
 
 
 {% endblock %}
+

@@ -104,100 +104,112 @@ def main_page():
     all_games = db.session.query(Game).all()
 
     #This query receives a list of game id's that a user has created.
-    user_created_games = db.session.query(GameMaster.created_games).filter(GameMaster.user_id == session["active_session"]).all()
+    #user_created_games = db.session.query(GameMaster.created_games).filter(GameMaster.user_id == session["active_session"]).all()
 
-    games_created = []
+    # games_created = []
 
-    for game_id in user_created_games:
-        game = db.session.query(Game).filter(Game.game_id == game_id)
-        games_created.append(game.game_name)
-        print(games_created)
+    # for game_id in user_created_games:
+    #     game = db.session.query(Game).filter(Game.game_id == game_id)
+    #     games_created.append(game.game_name)
+    #     print(games_created)
 
     return render_template("mainpage.html",
-                            all_games=all_games,
-                            user_games = user_created_games)
+                            all_games=all_games)
+                            # user_games = user_created_games)
 
-@app.route('/create-game')
-def create_game_page():
-    """Page shown where GM's can create a game."""
+# @app.route('/create-game')
+# def create_game_page():
+#     """Page shown where GM's can create a game."""
 
-    user_id = session['active_session']
+#     user_id = session['active_session']
 
-    return render_template("game_creation.html")
+#     return render_template("game_creation.html")
 
-@app.route('/game-shell', methods=["POST"])
-def game_shell_creation():
-    """This gets the puzzle/game details from game_creation.html)"""
+# @app.route('/game-shell', methods=["POST"])
+# def game_shell_creation():
+#     """This gets the puzzle/game details from game_creation.html)"""
 
-    game_title = request.form.get("game_title")
-    game_description = request.form.get("game_description")
+#     game_title = request.form.get("game_title")
+#     game_description = request.form.get("game_description")
 
-    game_info = db.session.query(Game.game_id, Game.game_name).all()
+#     game_info = db.session.query(Game.game_id, Game.game_name).all()
 
-    # for game in game_info:
-    #     if game_title == game[1]:
-    #         flash(u"This game already exists. Please create a new game.")
-    #         return redirect("/create-game")
+#     # for game in game_info:
+#     #     if game_title == game[1]:
+#     #         flash(u"This game already exists. Please create a new game.")
+#     #         return redirect("/create-game")
 
     
-    #Adding game to Games table in storytime DB.
-    new_game = Game(game_name=game_title, game_description=game_description)
-    db.session.add(new_game)
-    db.session.commit()
+#     #Adding game to Games table in storytime DB.
+#     new_game = Game(game_name=game_title, game_description=game_description)
+#     db.session.add(new_game)
+#     db.session.commit()
 
-    user_id = session["active_session"]
-    created_game = new_game.game_id
+#     user_id = session["active_session"]
+#     created_game = new_game.game_id
 
-    gm_record = GameMaster(user_id=user_id, created_games=created_game)
-    db.session.add(gm_record)
-    db.session.commit()
+#     gm_record = GameMaster(user_id=user_id, created_games=created_game)
+#     db.session.add(gm_record)
+#     db.session.commit()
 
-    session['current_game'] = created_game
+#     session['current_game'] = created_game
 
-    return render_template("game_details.html",
-                            game_id=created_game,
-                            game_name=new_game.game_name)
+#     return render_template("game_details.html",
+#                             game_id=created_game,
+#                             game_name=new_game.game_name)
 
 
-@app.route('/game-details', methods=["POST"])
-def get_game_details():
-    """Route to record game details for an event."""
+# @app.route('/game-details', methods=["POST"])
+# def get_game_details():
+#     """Route to record game details for an event."""
 
-    game_id = session['current_game']
+#     game_id = session['current_game']
 
-    game_name = db.session.query(Game.game_name).filter(Game.game_id == game_id).first()
-    game_name = game_name[0]
+#     game_name = db.session.query(Game.game_name).filter(Game.game_id == game_id).first()
+#     game_name = game_name[0]
 
-    event_order = request.form.get("event_order")
-    latitude = request.form.get("latitude")
-    longitude = request.form.get("longitude")
-    story_text = request.form.get("story_text")
-    puzzle = request.form.get("puzzle")    
-    puzzle_key = request.form.get("puzzle_key")
-    puzzle_hint = request.form.get("puzzle_hint")
-    weather_condition = request.form.get("weather_condition")
+#     event_order = request.form.get("event_order")
+#     latitude = request.form.get("latitude")
+#     longitude = request.form.get("longitude")
+#     story_text = request.form.get("story_text")
+#     puzzle = request.form.get("puzzle")    
+#     puzzle_key = request.form.get("puzzle_key")
+#     puzzle_hint = request.form.get("puzzle_hint")
+#     weather_condition = request.form.get("weather_condition")
 
-    #Adding event to Game Information table.
-    game_item = GameInfo(game_id=game_id, event_order=event_order, latitude=latitude,
-                    longitude=longitude, story_text=story_text, puzzle=puzzle, puzzle_key=puzzle_key,
-                    puzzle_hint=puzzle_hint, weather_condition=weather_condition)
-    db.session.add(game_item)
-    db.session.commit()
+#     #Adding event to Game Information table.
+#     game_item = GameInfo(game_id=game_id, event_order=event_order, latitude=latitude,
+#                     longitude=longitude, story_text=story_text, puzzle=puzzle, puzzle_key=puzzle_key,
+#                     puzzle_hint=puzzle_hint, weather_condition=weather_condition)
+#     db.session.add(game_item)
+#     db.session.commit()
 
-    #Pulling game details
-    game_details = db.session.query(GameInfo).filter(GameInfo.game_id == game_id).all()
+#     #Pulling game details
+#     game_details = db.session.query(GameInfo).filter(GameInfo.game_id == game_id).all()
 
-    return render_template("game.html",
-                            game_id=game_id,
-                            game_name=game_name,
-                            game_details=game_details) 
+#     return render_template("game.html",
+#                             game_id=game_id,
+#                             game_name=game_name,
+#                             game_details=game_details) 
 
 @app.route('/game-page')
 def show_game():
     """Route to game page."""
 
+    game_name = request.args.get('game_name')
 
-    return render_template("game.html")
+    game = db.session.query(Game).filter(Game.game_name == game_name).one()
+
+    game_id = game.game_id
+    game_description = game.game_description
+
+    game_info = db.session.query(GameInfo).filter(GameInfo.game_id == game_id).all()
+
+    return render_template("game.html",
+                            game_id=game_id,
+                            game_name=game_name,
+                            game_description=game_description,
+                            game_info=game_info)
 
 
 
