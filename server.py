@@ -11,11 +11,11 @@ from model import User, GameMaster, Player, Game, GameInfo, connect_to_db, db
 
 import json
 
+import os
 
 app = Flask(__name__)
 
-# Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = os.environ["SECRET_KEY"]
 
 # If an undefined variable is used in Jinja2, it raises an error.
 app.jinja_env.undefined = StrictUndefined
@@ -78,6 +78,7 @@ def login_check():
     for user in user_info:
         if user[0] == email and user[1] == password:
             flash(u"Welcome Back!")
+            flash("You're now logged in. Happy Gaming!")            
             session["active_session"] = user.user_id
             return redirect("/main-page")
         else:
@@ -101,8 +102,6 @@ def logout_page():
 def main_page():
     """Main page shown once a user logs in."""
 
-    flash("You're now logged in. Happy Gaming!")
-
     all_games = db.session.query(Game).all()
 
     #This query receives a list of game id's that a user has created.
@@ -115,8 +114,12 @@ def main_page():
     #     games_created.append(game.game_name)
     #     print(games_created)
 
+    #This query pulls the current users' information.
+    user_deets = db.session.query(User).filter(User.user_id == session["active_session"]).first()
+
     return render_template("mainpage.html",
-                            all_games=all_games)
+                            all_games=all_games,
+                            username = user_deets.username)
                             # user_games = user_created_games)
 
 # @app.route('/create-game')
@@ -215,13 +218,17 @@ def show_game():
         puzzle_key.append(game.puzzle_key)
         hints.append(game.puzzle_hint)
 
+
+    gkey = os.environ['GKEY']
+
     return render_template("game.html",
                             game_id=game_id,
                             game_name=game_name,
                             game_description=game_description,
                             game_info=game_info,
                             puzzle_key=puzzle_key,
-                            hints=hints)
+                            hints=hints,
+                            gkey=gkey)
 
 
 

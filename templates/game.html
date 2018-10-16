@@ -3,9 +3,10 @@
 {% block title %}<h1>Game Page</h1>{% endblock %}
 
 {% block content %}
-<a href="/main-page">Return to main page</a>
 
-<p>Current Game: ({{ game_id }}) {{ game_name }} ({{ game_description }})</p><br>
+<p>Current Game: ({{ game_id }}) {{ game_name }} ({{ game_description }})</p>
+
+<div id='map'></div><br>
 
 <ul class='game-events'>
         {% for game in game_info %}
@@ -17,9 +18,6 @@
                     <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
                     <input type='submit' value='Submit' onclick='getResponse()'><br>
                     <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>
-
-
-
                 </form>
             {% else %}
                 <form class='hidden' id='event{{ loop.index }}'>
@@ -33,18 +31,79 @@
         {% endfor %}
 </ul>
 
+<a href="/main-page">Return to main page</a>
+
+
+
 <script>
+    // Get users location.
+
+    // Show map.
+    function initMap() {
+        // Set map near Hackbright to test.
+        let sbHackbright = {lat: 37.3797849, lng: -121.9431958};
+
+        let map = new google.maps.Map(document.getElementById('map'), {
+            center: sbHackbright,
+            zoom: 16,
+        })
+        
+        // Create marker on map for testing.
+        let marker = new google.maps.Marker({
+            position: sbHackbright,
+            map: map,
+        });
+
+
+        // Testing Coordinates
+        let test_position = {lat: 37.37, lng: -121.94};
+
+        // If browswer supports "getting" location.
+        if (navigator.geolocation) {
+
+            // Successful location grab
+            let watchID = navigator.geolocation.watchPosition(function(position) {
+                let pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+
+                marker.setPosition(pos);
+                map.setCenter(pos);
+
+                // Testing Coordinates
+                // marker.setPosition(test_position);
+                // map.setCenter(test_position);
+
+            // Unsuccessful location grab
+            }, function() {
+                handleLocationError(alert("Location could not be found."), map.getCenter());
+
+            });
+        } // Code to handle error if browser does not support
+    }
+
+
+
+</script>
+
+<script>
+    // Pass in list of puzzle keys, list of puzzle hints.
+    let puzzle_key = {{ puzzle_key | safe }};    
+    let hints = {{ hints | safe }};
+
+    // Set counters.
     let counter = 1;
     let puzzle_index = 0;
-    let hints = 0;
 
+    // Find total events to set counter limit.
+    let totalEvents = puzzle_key.length;
+
+
+// Take a look at using AJAX to get key/etc. ** When there is enough time. **
     function getResponse() {
         // Prevent re-routing.
         event.preventDefault();
-
-        // Pass in list of puzzle keys, list of puzzle hints.
-        let puzzle_key = {{ puzzle_key | safe }};
-        let hints = {{ hints | safe }};
 
         // Take user response from text box.
         let response = document.getElementById("response" + counter).value;
@@ -54,15 +113,12 @@
         if (response === puzzle_key[puzzle_index]) {
             // If correct, increment the puzzle key and execute class change.
             puzzle_index += 1;
-
             changeEvent();         
 
         } else {
             // If wrong, pop up hint.
             let hint = document.getElementById("hint" + counter);
             hint.setAttribute('class', 'hint');
-
-            console.log("Wrong answer.");
         }
     }
 
@@ -70,19 +126,21 @@
         // This line of code is to make the current event disabled.
         $('#event' + counter).children().attr('disabled', true);
 
-        // These next lines of code are to set the next event as current.
-        next = document.getElementById('event'+ (counter + 1));
-        next.setAttribute('class', 'current');
+        if (counter < totalEvents) {
+            // These next lines of code are to set the next event as current.
+            next = document.getElementById('event'+ (counter + 1));
+            next.setAttribute('class', 'current');
 
-        counter += 1;
+            counter += 1;
+        } else {
+            // ALERT completed message once user passes all puzzles.
+            alert("Great job!!! You've solved all puzzles!")
+        }
     }
-
 
 </script>
 
-<br>
-<br>
-
+<script src="https://maps.googleapis.com/maps/api/js?key={{ gkey }}&callback=initMap" async defer></script>
 
 {% endblock %}
 

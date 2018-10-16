@@ -1,7 +1,8 @@
 .current {
     border: 1px solid black;
     padding: 5px;
-    margin-right: 150px;
+    margin: auto;
+    margin-right: 80px;
 }
 
 .hidden {
@@ -10,4 +11,10 @@
 
 .hint {
     padding: 1px;
+}
+
+#map {
+    height: 300px;
+    width: 500px;
+    margin: auto;
 }
