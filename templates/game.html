@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<p>Current Game: ({{ game_id }}) {{ game_name }} ({{ game_description }})</p>
+<p>Current Game: (Game # {{ game_id }}) {{ game_name }}: {{ game_description }}</p>
 
 <div id='map'></div><br>
 
@@ -18,6 +18,7 @@
                     <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
                     <input type='submit' value='Submit' onclick='getResponse()'><br>
                     <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>
+                    <p class='hidden' id='location{{ loop.index }}'>Directions: {{ game.location_hint }}</p>                      
                 </form>
             {% else %}
                 <form class='hidden' id='event{{ loop.index }}'>
@@ -25,7 +26,8 @@
                     Puzzle: {{ game.puzzle }}<br>
                     <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
                     <input type='submit' value='Submit' onclick='getResponse()'><br>
-                    <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>          
+                    <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>
+                    <p class='hidden' id='location{{ loop.index }}'>Directions: {{ game.location_hint }}</p>          
                 </form>
             {% endif %}
         {% endfor %}
@@ -36,16 +38,16 @@
 
 
 <script>
-    // Get users location.
 
-    // Show map.
     function initMap() {
-        // Set map near Hackbright to test.
+        // Function to place map on website and set current marker.
+
+        // Set map near Hackbright (game area for game 3).
         let sbHackbright = {lat: 37.3797849, lng: -121.9431958};
 
         let map = new google.maps.Map(document.getElementById('map'), {
             center: sbHackbright,
-            zoom: 16,
+            zoom: 17,
         })
         
         // Create marker on map for testing.
@@ -54,14 +56,10 @@
             map: map,
         });
 
-
-        // Testing Coordinates
-        let test_position = {lat: 37.37, lng: -121.94};
-
-        // If browswer supports "getting" location.
         if (navigator.geolocation) {
+            // If statement to check if browser supports "getting" location.
 
-            // Successful location grab
+            // Execute if successful location grab.
             let watchID = navigator.geolocation.watchPosition(function(position) {
                 let pos = {
                     lat: position.coords.latitude,
@@ -71,26 +69,28 @@
                 marker.setPosition(pos);
                 map.setCenter(pos);
 
-                // Testing Coordinates
-                // marker.setPosition(test_position);
-                // map.setCenter(test_position);
-
-            // Unsuccessful location grab
+            // Execute if unsuccessful location grab.
             }, function() {
                 handleLocationError(alert("Location could not be found."), map.getCenter());
-
             });
-        } // Code to handle error if browser does not support
+        } else {
+        // Code to handle error if browser does not support Geolocation
+            alert("Your browser does not support Geolocation. Please use another browser that does, such as Chrome.")
+        }
     }
 
 
+    // Code to handle puzzle responses along with hints & location.
 
-</script>
-
-<script>
     // Pass in list of puzzle keys, list of puzzle hints.
+    // $.get('/route', data, callback);
+
+
+    // all of this stuff should be the result of an ajax get request
+    // it should be in json!
     let puzzle_key = {{ puzzle_key | safe }};    
     let hints = {{ hints | safe }};
+    let location_hint = {{ location_hint | safe }};
 
     // Set counters.
     let counter = 1;
@@ -113,7 +113,11 @@
         if (response === puzzle_key[puzzle_index]) {
             // If correct, increment the puzzle key and execute class change.
             puzzle_index += 1;
-            changeEvent();         
+
+            let location = document.getElementById("location" + counter);
+            location.setAttribute('class', 'hint');
+
+            atLocation();         
 
         } else {
             // If wrong, pop up hint.
@@ -121,6 +125,44 @@
             hint.setAttribute('class', 'hint');
         }
     }
+
+
+    function atLocation() {
+        // Function to check if user is at location in order to trigger next event.
+
+        let coordinates = {{ coordinates }};
+
+        // latlng = google.maps.LatLng(coordinates[0][0], coordinates[0][0])
+        // latlng.equals(SOMEOTHERLATLNGHERE)
+
+        let watchID = navigator.geolocation.getCurrentPosition(function(position) {
+            let pos = [
+                position.coords.latitude,
+                position.coords.longitude
+            ];
+
+            console.log(pos);
+
+
+            console.log(coordinates[counter]);
+
+            let testpos = [37.379185, -121.940723];
+            testpos = JSON.parse('[37.379185, -121.940723]');
+
+            console.log(testpos);
+
+            if (testpos === coordinates[counter]) {
+            // if (pos === coordinates[counter]) {
+                changeEvent();
+
+            } else {
+                console.log("Does not match");
+
+            };
+
+        });        
+    }
+
 
     function changeEvent() {
         // This line of code is to make the current event disabled.

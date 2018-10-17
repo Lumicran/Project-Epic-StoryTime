@@ -103,13 +103,14 @@ def load_game_details():
 
     for row in open("seed_data/u.gameinfo"):
         row = row.rstrip()
-        game_info_id, game_id, event_order, latitude, longitude, story_text, puzzle, puzzle_key, puzzle_hint, weather_condition = row.split("|")
+        game_info_id, game_id, event_order, latitude, longitude, location_hint, story_text, puzzle, puzzle_key, puzzle_hint, weather_condition = row.split("|")
 
         gameinfo = GameInfo(game_info_id=game_info_id,
                             game_id=game_id,
                             event_order=event_order,
                             latitude=latitude,
                             longitude=longitude,
+                            location_hint=location_hint,
                             story_text=story_text,
                             puzzle=puzzle,
                             puzzle_key=puzzle_key,

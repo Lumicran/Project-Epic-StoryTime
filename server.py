@@ -213,13 +213,23 @@ def show_game():
     # Code to pass in puzzle key as json so we can use it in JavaScript
     puzzle_key = []
     hints = []
+    location_hint = []
+    coordinates = []
 
     for game in game_info:
         puzzle_key.append(game.puzzle_key)
         hints.append(game.puzzle_hint)
+        location_hint.append(game.location_hint)
 
+        latitude = float(game.latitude)
+        longitude = float(game.longitude)
+        coordinates.append([latitude, longitude])
 
     gkey = os.environ['GKEY']
+
+    print("\n\n\n\n\n\n")
+    print(coordinates)
+    print("\n\n\n\n\n\n")
 
     return render_template("game.html",
                             game_id=game_id,
@@ -228,7 +238,9 @@ def show_game():
                             game_info=game_info,
                             puzzle_key=puzzle_key,
                             hints=hints,
-                            gkey=gkey)
+                            location_hint=location_hint,
+                            gkey=gkey,
+                            coordinates=coordinates)
 
 
 
