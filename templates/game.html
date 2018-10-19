@@ -85,10 +85,19 @@
     // Pass in list of puzzle keys, list of puzzle hints.
     // $.get('/route', data, callback);
 
+    let puzzle_key = [];
+    let totalEvents = puzzle_key.length;
+
+    $.get('/game-page/puzzle-key', { game_id: {{ game_id }} } , function (results) {
+        puzzle_key = results;
+        console.log(puzzle_key);
+        totalEvents = puzzle_key.length;
+    })
 
     // all of this stuff should be the result of an ajax get request
     // it should be in json!
-    let puzzle_key = {{ puzzle_key | safe }};    
+    // let puzzle_key = {{ puzzle_key | safe }}; 
+
     let hints = {{ hints | safe }};
     let location_hint = {{ location_hint | safe }};
 
@@ -97,7 +106,7 @@
     let puzzle_index = 0;
 
     // Find total events to set counter limit.
-    let totalEvents = puzzle_key.length;
+    // let totalEvents = puzzle_key.length;
 
 
 // Take a look at using AJAX to get key/etc. ** When there is enough time. **
@@ -105,64 +114,75 @@
         // Prevent re-routing.
         event.preventDefault();
 
+        if (counter === totalEvents) {
+            changeEvent();
+        }
+
         // Take user response from text box.
         let response = document.getElementById("response" + counter).value;
 
+        console.log(response);
+        console.log(puzzle_key[puzzle_index]);
+        console.log(puzzle_index);
         // Check if user response is same as puzzle key.
-
         if (response === puzzle_key[puzzle_index]) {
+            console.log("if true");
+
             // If correct, increment the puzzle key and execute class change.
             puzzle_index += 1;
 
             let location = document.getElementById("location" + counter);
             location.setAttribute('class', 'hint');
 
-            atLocation();         
+            checkLocation();         
+
 
         } else {
             // If wrong, pop up hint.
+            console.log("if false")
             let hint = document.getElementById("hint" + counter);
             hint.setAttribute('class', 'hint');
         }
     }
 
 
-    function atLocation() {
-        // Function to check if user is at location in order to trigger next event.
+    function checkLocation() {
+        console.log("check Location running");
+        //Function to check if user is at location in order to trigger next event.
 
         let coordinates = {{ coordinates }};
 
-        // latlng = google.maps.LatLng(coordinates[0][0], coordinates[0][0])
-        // latlng.equals(SOMEOTHERLATLNGHERE)
+        //latlng = google.maps.LatLng(coordinates[0][0], coordinates[0][0])
+        //latlng.equals(SOMEOTHERLATLNGHERE)
 
-        let watchID = navigator.geolocation.getCurrentPosition(function(position) {
-            let pos = [
-                position.coords.latitude,
-                position.coords.longitude
-            ];
+// Check puzzle response here
+        let watchID = navigator.geolocation.watchPosition(function(position) {
 
-            console.log(pos);
-
-
-            console.log(coordinates[counter]);
-
-            let testpos = [37.379185, -121.940723];
-            testpos = JSON.parse('[37.379185, -121.940723]');
-
-            console.log(testpos);
-
-            if (testpos === coordinates[counter]) {
-            // if (pos === coordinates[counter]) {
-                changeEvent();
-
-            } else {
-                console.log("Does not match");
-
+            let pos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
             };
 
-        });        
-    }
+            let latCoord = coordinates[counter][0];
+            let longCoord = coordinates[counter][1];
 
+            let puzzlePos = {
+                lat: latCoord,
+                lng: longCoord
+            }
+
+            if (pos.lat === puzzlePos.lat && pos.lng === puzzlePos.lng) {
+                console.log("You're good, change event!");
+                changeEvent();
+                console.log("worked!!!")
+
+                navigator.geolocation.clearWatch(watchID);
+
+            } else {
+                console.log("location else")
+            }
+        });
+    }
 
     function changeEvent() {
         // This line of code is to make the current event disabled.

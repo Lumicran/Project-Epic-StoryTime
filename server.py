@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session, jsonify)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -227,10 +227,6 @@ def show_game():
 
     gkey = os.environ['GKEY']
 
-    print("\n\n\n\n\n\n")
-    print(coordinates)
-    print("\n\n\n\n\n\n")
-
     return render_template("game.html",
                             game_id=game_id,
                             game_name=game_name,
@@ -241,6 +237,25 @@ def show_game():
                             location_hint=location_hint,
                             gkey=gkey,
                             coordinates=coordinates)
+
+@app.route('/game-page/puzzle-key')
+def get_game_puzzle_key():
+
+    game_id = request.args.get('game_id')
+
+    game_info = db.session.query(GameInfo.puzzle_key).filter(GameInfo.game_id == game_id).all()
+
+    print(game_info)
+
+    results = [ t[0] for t in game_info ]
+
+    print(results)
+
+    return jsonify(results)
+
+
+
+
 
 
 
