@@ -96,15 +96,51 @@ def init_app():
     print("Connected to DB.")
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri="postgresql:///testdb"):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///storytime'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///storytime'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ECHO'] = False
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+
+
+
+def test_data():
+    """Test data for database."""
+
+    # In case this is run more than once, empty database of any prior information.
+    GameMaster.query.delete()
+    Player.query.delete()
+    User.query.delete()
+    GameInfo.query.delete()
+    Game.query.delete()
+
+    # Add sample users
+    ben = User(fname="Ben", lname="Neb", username="benneb", email="ben@gmail.com", password="ben")
+    lisa = User(fname="Lisa", lname="Asil", username="lisaasil", email="lisa@gmail.com", password="lisa")
+
+    #Add sample game
+    game1 = Game(game_id=1, game_name="Cats Attack", game_description="Cats attack an unsuspecting couple.")
+    game2 = Game(game_id=2, game_name="Dogs Attack", game_description="Dogs attack a suspecting couple.")
+
+    #Add sample game information
+    game1evt1 = GameInfo(game_info_id=1, game_id=1, event_order=1, latitude=100, longitude=-100, location_hint="Location Hint", story_text="Run from the cats!", puzzle="Is a thumb a finger?", puzzle_key="No", puzzle_hint="No", weather_condition="no_condition")
+
+    import pdb
+    pdb.set_trace()
+
+
+    db.session.add_all([ben, lisa])
+    db.session.add(game1)
+    db.session.add(game2)
+    db.session.commit()
+    db.session.add(game1evt1)
+    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -113,9 +149,7 @@ if __name__ == "__main__":
 
     init_app()
 
-
-
-
+    test_data()
 
 
 

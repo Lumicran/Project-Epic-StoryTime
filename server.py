@@ -47,6 +47,8 @@ def register_process():
 
     user_info = User.query.filter_by(email=email).all()
 
+    all_games = db.session.query(Game).all()
+
     if user_info:
         flash("You've been here before - please log in to continue.")
         return render_template("login.html")
@@ -58,8 +60,9 @@ def register_process():
         session["active_session"] = new_user.user_id
 
         flash("Thank you for registering. Happy Gaming!")
-        return render_template("mainpage.html")
-
+        return render_template("mainpage.html",
+                                username=username,
+                                all_games=all_games)
 
 @app.route('/login')
 def login_page():
@@ -256,16 +259,12 @@ def get_game_puzzle_key():
 
 
 
-
-
-
-
 if __name__ == "__main__":
     app.debug = True
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
 
-    connect_to_db(app)
+    connect_to_db(app, db_uri='postgresql:///storytime')
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
