@@ -19,6 +19,8 @@ class User(db.Model):
     username = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
+    security_question = db.Column(db.String(64), nullable=False)
+    security_answer = db.Column(db.String(64), nullable=False)
 #Q 1: Add a user image to the table (profile picture)
     # user_image = db.Column(db.)
 
@@ -100,7 +102,7 @@ def connect_to_db(app, db_uri="postgresql:///testdb"):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///storytime'
+    # db_uri = "postgresql:///storytime"
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ECHO'] = False
@@ -112,8 +114,9 @@ def connect_to_db(app, db_uri="postgresql:///testdb"):
 
 def test_data():
     """Test data for database."""
+    import hashlib
 
-    # In case this is run more than once, empty database of any prior information.
+    # # In case this is run more than once, empty database of any prior information.
     GameMaster.query.delete()
     Player.query.delete()
     User.query.delete()
@@ -121,8 +124,8 @@ def test_data():
     Game.query.delete()
 
     # Add sample users
-    ben = User(fname="Ben", lname="Neb", username="benneb", email="ben@gmail.com", password="ben")
-    lisa = User(fname="Lisa", lname="Asil", username="lisaasil", email="lisa@gmail.com", password="lisa")
+    ben = User(fname="Ben", lname="Neb", username="benneb", email="ben@gmail.com", password=hashlib.sha256("ben".encode("utf-8")).hexdigest(), security_question="pet", security_answer="Zuko")
+    lisa = User(fname="Lisa", lname="Asil", username="lisaasil", email="lisa@gmail.com", password=hashlib.sha256("lisa".encode("utf-8")).hexdigest(), security_question="pet", security_answer="Azula")
 
     #Add sample game
     game1 = Game(game_id=1, game_name="Cats Attack", game_description="Cats attack an unsuspecting couple.")
@@ -130,10 +133,6 @@ def test_data():
 
     #Add sample game information
     game1evt1 = GameInfo(game_info_id=1, game_id=1, event_order=1, latitude=100, longitude=-100, location_hint="Location Hint", story_text="Run from the cats!", puzzle="Is a thumb a finger?", puzzle_key="No", puzzle_hint="No", weather_condition="no_condition")
-
-    import pdb
-    pdb.set_trace()
-
 
     db.session.add_all([ben, lisa])
     db.session.add(game1)

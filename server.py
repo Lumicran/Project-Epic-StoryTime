@@ -13,6 +13,8 @@ import json
 
 import os
 
+import hashlib
+
 app = Flask(__name__)
 
 app.secret_key = os.environ["SECRET_KEY"]
@@ -35,7 +37,7 @@ def route_to_form():
     return render_template("registration.html")
 
 
-@app.route('/process-registration', methods =["POST"])
+@app.route('/process-registration', methods = ["POST"])
 def register_process():
     """Find out whether user is in database or not and route accordingly."""
 
@@ -44,6 +46,10 @@ def register_process():
     username = request.form.get("username")
     email = request.form.get("user_email")
     password = request.form.get("user_password")
+    security = request.form.get("security")
+    sec_answer = request.form.get("security_answer")
+
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     user_info = User.query.filter_by(email=email).all()
 
@@ -53,7 +59,7 @@ def register_process():
         flash("You've been here before - please log in to continue.")
         return render_template("login.html")
     else:
-        new_user = User(fname=fname, lname=lname, username=username, email=email, password=password)
+        new_user = User(fname=fname, lname=lname, username=username, email=email, password=password, security_question=security, security_answer=sec_answer)
         db.session.add(new_user)
         db.session.commit()
 
@@ -77,6 +83,8 @@ def login_check():
     email = request.form.get("user_email")
     password = request.form.get("user_password")
     user_info = db.session.query(User.email, User.password, User.user_id).all()
+
+    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     for user in user_info:
         if user[0] == email and user[1] == password:

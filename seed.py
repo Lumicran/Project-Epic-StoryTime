@@ -4,6 +4,7 @@ from sqlalchemy import func
 from model import User, GameMaster, Player, Game, GameInfo
 from model import init_app, connect_to_db, db
 from server import app
+import hashlib
 
 
 def load_users():
@@ -11,21 +12,21 @@ def load_users():
 
     print("Users")
 
-    # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate users
-    User.query.delete()
-
     # Read u.user file and insert data
     for row in open("seed_data/u.user"):
         row = row.rstrip()
-        user_id, fname, lname, username, email, password = row.split("|")
+        user_id, fname, lname, username, email, password, security_question, security_answer = row.split("|")
+        
+        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
         user = User(user_id=user_id,
                     fname=fname,
                     lname=lname,
                     username=username,
                     email=email,
-                    password=password)
+                    password=password,
+                    security_question=security_question,
+                    security_answer=security_answer)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(user)
@@ -40,7 +41,7 @@ def load_gms():
     print("Game Masters")
 
     # Delete all rows in table to streamline second upload.
-    GameMaster.query.delete()
+    # GameMaster.query.delete()
 
     # Read u.gm file and parse information.
 
@@ -60,7 +61,7 @@ def load_players():
 
     print("Players")
 
-    Player.query.delete()
+    # Player.query.delete()
 
     for row in open("seed_data/u.player"):
         row = row.rstrip()
@@ -80,7 +81,7 @@ def load_games():
 
     print("Games")
 
-    Game.query.delete()
+    # Game.query.delete()
 
     for row in open("seed_data/u.game"):
         row = row.rstrip()
@@ -99,7 +100,7 @@ def load_game_details():
 
     print("Game Info")
 
-    GameInfo.query.delete()
+    # GameInfo.query.delete()
 
     for row in open("seed_data/u.gameinfo"):
         row = row.rstrip()
@@ -191,6 +192,11 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
+    GameMaster.query.delete()
+    Player.query.delete()
+    User.query.delete()
+    GameInfo.query.delete()
+    Game.query.delete()
     load_users()
     load_games()
     load_gms()

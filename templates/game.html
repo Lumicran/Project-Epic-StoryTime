@@ -90,7 +90,6 @@
 
     $.get('/game-page/puzzle-key', { game_id: {{ game_id }} } , function (results) {
         puzzle_key = results;
-        console.log(puzzle_key);
         totalEvents = puzzle_key.length;
     })
 
