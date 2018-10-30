@@ -6,14 +6,81 @@
 
 <h1>Welcome Back!</h1>
 
-  <form action="/login-check" method="POST">
-
-    Email: <input type='text' name='user_email'><br>
+<form action="/login-check" method="POST">
+    Email: <input type='text' name='user_email' id='email'><br>
     Password: <input type='password' name='user_password'>
+    <input type='submit'><br>
+</form>
 
-    <input type='submit'>
+<form action="/update-password" method="POST">
+    <button type="button" onclick="prompt_security()">Reset Password</button>
+    <p class='hidden' id="security_question"></p>    
+    <input type='text' class='hidden' id="answer">
+    <input type="submit" onclick="check_answer()" class='hidden' id="check_security" value="Check Response"><br>
+    
+    <input type='text' class='hidden' name='user_email' id='pass_email'><br>
 
-  </form>
+    <p class='hidden' id='hidden_text'> New Password:</p>
+        <input type='text' class='hidden' name='new_password' id='new_password'><br>
+    <input type='submit' onclick='update_email()' class='hidden' id='password_submit'>
+</form>
 
+
+<script>
+    let security_answer = null;
+
+    // Function to handle user clicking "Reset Password
+    function prompt_security() {
+        let email = document.getElementById("email").value;
+
+        $.get('/security-check', { email: email }, function (results) {
+            // Code to pass security question and answer
+            let security_question = results[0][0];
+            security_answer = results[0][1];
+
+            // Code to unhide security question
+            let security_reveal = document.getElementById("security_question");
+            security_reveal.setAttribute('class', 'hint');
+            security_reveal.innerHTML = security_question;
+
+            // Code to unhide text box for input & submit button
+            let user_answer = document.getElementById("answer");
+            user_answer.setAttribute('class', 'hint');
+            let submit_button = document.getElementById("check_security");
+            submit_button.setAttribute('class', 'hint');
+        })
+    }
+
+    // Function to submit user response and check against database answer
+    function check_answer() {
+        event.preventDefault();
+
+        let user_input = document.getElementById("answer").value;
+
+        if (security_answer === user_input) {
+            alert("Congrats! Your security response matched what was in the database.")
+
+            let reveal_text = document.getElementById("hidden_text");
+            reveal_text.setAttribute('class', 'hint');
+
+            let password_input = document.getElementById("new_password");
+            password_input.setAttribute('class', 'hint');
+
+            let pssd_submit = document.getElementById("password_submit");
+            pssd_submit.setAttribute('class', 'hint');
+
+        }  else {
+            alert("Sorry, " + "'" + user_input + "'" + " was not found in our database.")
+        }
+    }
+
+    function update_email() {
+        let user_email = document.getElementById("email").value;
+        let email_text = document.getElementById("pass_email");
+
+        email_text.value = user_email;
+    }
+
+</script>
 
 {% endblock %}

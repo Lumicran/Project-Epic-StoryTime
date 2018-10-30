@@ -92,12 +92,50 @@ def login_check():
             flash("You're now logged in. Happy Gaming!")            
             session["active_session"] = user.user_id
             return redirect("/main-page")
-        else:
-            continue
 
+    # If user credentials do not match database, we will flash a message and allow them to enter security question.
     flash(u"No account found for the entered email/password.")
+
     return render_template("login.html")
 
+
+@app.route('/security-check')
+def security_check():
+    # Route that returns users security question and answer.
+
+    email = request.args.get("email")
+    results = db.session.query(User.security_question, User.security_answer).filter(User.email == email).all()
+
+    return jsonify(results)
+
+@app.route('/update-password', methods=["POST"])
+def update_password():
+    # Route that updates password inside database to new password from user.
+
+    # Get user email and new password
+    user_email = request.form.get("user_email")
+
+    new_password = request.form.get("new_password")
+    new_password = hashlib.sha256(new_password.encode("utf-8")).hexdigest()
+
+    # Find user id in database using email as a filter
+    user_info = User.query.filter_by(email=user_email).first()
+    print(user_info)
+
+    # Get into user session
+    session["active_session"] = user_info.user_id
+
+    # Update password for the relevant user
+    db.session.add(user_info)
+    user_info.password = new_password
+    db.session.commit()
+
+    # Get out of user session
+    session.pop('active_session')
+
+    flash(u"Please log in with your newly updated password")
+
+    return redirect("/login")
 
 @app.route('/logout')
 def logout_page():

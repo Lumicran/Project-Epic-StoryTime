@@ -125,7 +125,6 @@
         console.log(puzzle_index);
         // Check if user response is same as puzzle key.
         if (response === puzzle_key[puzzle_index]) {
-            console.log("if true");
 
             // If correct, increment the puzzle key and execute class change.
             puzzle_index += 1;
@@ -146,13 +145,8 @@
 
 
     function checkLocation() {
-        console.log("check Location running");
         //Function to check if user is at location in order to trigger next event.
-
         let coordinates = {{ coordinates }};
-
-        //latlng = google.maps.LatLng(coordinates[0][0], coordinates[0][0])
-        //latlng.equals(SOMEOTHERLATLNGHERE)
 
 // Check puzzle response here
         let watchID = navigator.geolocation.watchPosition(function(position) {
