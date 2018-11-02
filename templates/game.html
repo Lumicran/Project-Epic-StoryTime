@@ -42,17 +42,17 @@
     function initMap() {
         // Function to place map on website and set current marker.
 
-        // Set map near Hackbright (game area for game 3).
-        let sbHackbright = {lat: 37.3797849, lng: -121.9431958};
+        // Set map near starting location (game area for game 3).
+        let startingLocation = {lat: 37.3797849, lng: -121.9431958};
 
         let map = new google.maps.Map(document.getElementById('map'), {
-            center: sbHackbright,
+            center: startingLocation,
             zoom: 17,
         })
         
         // Create marker on map for testing.
         let marker = new google.maps.Marker({
-            position: sbHackbright,
+            position: startingLocation,
             map: map,
         });
 
@@ -88,7 +88,7 @@
     let puzzle_key = [];
     let totalEvents = puzzle_key.length;
 
-    $.get('/game-page/puzzle-key', { game_id: {{ game_id }} } , function (results) {
+    $.get('/puzzle-key', { game_id: {{ game_id }} } , function (results) {
         puzzle_key = results;
         totalEvents = puzzle_key.length;
     })
@@ -113,16 +113,20 @@
         // Prevent re-routing.
         event.preventDefault();
 
-        if (counter === totalEvents) {
-            changeEvent();
-        }
-
         // Take user response from text box.
         let response = document.getElementById("response" + counter).value;
 
-        console.log(response);
-        console.log(puzzle_key[puzzle_index]);
-        console.log(puzzle_index);
+
+        if (counter === totalEvents) {
+            if (response === puzzle_key[puzzle_index]) {
+                changeEvent();
+            } else {
+                let hint = document.getElementById("hint" + counter);
+                hint.setAttribute('class', 'hint');                
+            }
+
+        }
+
         // Check if user response is same as puzzle key.
         if (response === puzzle_key[puzzle_index]) {
 
@@ -137,7 +141,6 @@
 
         } else {
             // If wrong, pop up hint.
-            console.log("if false")
             let hint = document.getElementById("hint" + counter);
             hint.setAttribute('class', 'hint');
         }
@@ -165,17 +168,14 @@
             }
 
             if (pos.lat === puzzlePos.lat && pos.lng === puzzlePos.lng) {
-                console.log("You're good, change event!");
                 changeEvent();
-                console.log("worked!!!")
-
                 navigator.geolocation.clearWatch(watchID);
 
             } else {
                 console.log("location else")
-            }
+            };
         });
-    }
+    };
 
     function changeEvent() {
         // This line of code is to make the current event disabled.
@@ -188,10 +188,16 @@
 
             counter += 1;
         } else {
+            // AJAX GET request to pass in information to server to update player information.
+            $.get('/record-game', { game_id: {{ game_id }} } , function (results) {
+                alert(results)
+            });
+
             // ALERT completed message once user passes all puzzles.
-            alert("Great job!!! You've solved all puzzles!")
-        }
-    }
+            alert("Great job!!! You've solved all puzzles!");
+        };
+    };
+
 
 </script>
 

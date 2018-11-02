@@ -40,7 +40,7 @@ class GameMaster(db.Model):
     created_games = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
     def __repr__(self):
-        return f"<gm_id: {gm_id} \n user_id: {user_id} \n created_games: {created_games}>"
+        return f"<gm_id: {self.gm_id} \n user_id: {self.user_id} \n created_games: {self.created_games}>"
 
 
 class Player(db.Model):
@@ -54,7 +54,7 @@ class Player(db.Model):
     games_not_played = db.Column(db.Integer, db.ForeignKey('games.game_id'), nullable=True)
 
     def __repr__(self):
-        return f"<player_id: {player_id} \n user_id: {user_id} \n games_played: {created_games} \n games_not_played: {games_not_played}>"
+        return f"<player_id: {self.player_id} \n user_id: {self.user_id} \n games_played: {self.games_played} \n games_not_played: {self.games_not_played}>"
 
 
 class Game(db.Model):
@@ -66,8 +66,8 @@ class Game(db.Model):
     game_name = db.Column(db.String(64), nullable=False)
     game_description = db.Column(db.Text, nullable=True)
 
-    # def __repr__(self):
-    #     return f"<game_id: {game_id} \n game_name: {game_name} \n game_gm: {game_gm}>"
+    def __repr__(self):
+        return f"<game_id: {self.game_id} \n game_name: {self.game_name} \n game_gm: {self.game_gm}>"
 
 
 class GameInfo(db.Model):
@@ -86,6 +86,10 @@ class GameInfo(db.Model):
     puzzle_key = db.Column(db.Text, nullable=False)
     puzzle_hint = db.Column(db.Text, nullable=True)
     weather_condition = db.Column(db.String(64), nullable=True)
+
+    def __repr__(self):
+        return f"<game_info_id: {self.game_info_id} \n game_id: {self.game_id} \n event_order: {self.event_order} \n latitude: {self.latitude} \n longitude: {self.longitude} \n location_hint: {self.location_hint} \n story_text: {self.story_text} \n puzzle: {self.puzzle} \n puzzle_key: {self.puzzle_key} \n puzzle_hint: {self.puzzle_hint} \n weather_condition: {weather_condition}>"
+
 
 #Functions to connect to database.
 

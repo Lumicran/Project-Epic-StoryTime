@@ -29,7 +29,7 @@
                     -Rank # <br>
                 </div>
 
-                <div class="col-9">
+                <div class="col-4">
                     Available Games to Play:<br>
                         <ul>
                             {% for game in all_games %}
@@ -41,6 +41,18 @@
                             {% endfor %}      
                         </ul>         
                 </div>
+
+                <div class="col-5">
+                    Leaderboard<br>
+
+                    <ul>
+                        {% for score in leaderboard_stats %}
+                            <li>
+                                {{ score }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>    
             </div>                
         </div>
     </body>

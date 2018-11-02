@@ -157,7 +157,7 @@ def set_val_player_id():
 
     # Set the value for the next gm_id to be max_id + 1
     query = "SELECT setval('players_player_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.execute(query, {'new_id': max_id})
     db.session.commit()
 
 def set_val_game_id():

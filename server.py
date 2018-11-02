@@ -120,18 +120,11 @@ def update_password():
 
     # Find user id in database using email as a filter
     user_info = User.query.filter_by(email=user_email).first()
-    print(user_info)
-
-    # Get into user session
-    session["active_session"] = user_info.user_id
 
     # Update password for the relevant user
     db.session.add(user_info)
     user_info.password = new_password
     db.session.commit()
-
-    # Get out of user session
-    session.pop('active_session')
 
     flash(u"Please log in with your newly updated password")
 
@@ -166,10 +159,31 @@ def main_page():
     #This query pulls the current users' information.
     user_deets = db.session.query(User).filter(User.user_id == session["active_session"]).first()
 
+    # This query pulls all the games players have played, along with their user_id (which we can use to pull user_id & usernames)
+    # leaderboard_stats = db.session.query(Player.user_id, User.username, Player.games_played).join(User).all()
+
+    leaderboard_stats = db.session.query(Player.user_id, User.username, Player.games_played, Games.).join(User).all()  
+    print(leaderboard_stats)
+    print("\n")
+
+    # leaderboard_dict = {}
+
+    # for user_id, username, games_played in leaderboard_stats:
+    #     leaderboard_dict[(user_id, username)] = games_played
+
+    # print(leaderboard_dict)
+    # for user_id, username, games_played in leaderboard_stats:
+    #     print(user_id)
+    #     print(username)        
+    #     print(games_played)
+    #     print("\n\n")
+
+
     return render_template("mainpage.html",
                             all_games=all_games,
-                            username = user_deets.username)
-                            # user_games = user_created_games)
+                            username = user_deets.username,
+                            # user_games = user_created_games,
+                            leaderboard_stats=leaderboard_stats)
 
 # @app.route('/create-game')
 # def create_game_page():
@@ -287,23 +301,41 @@ def show_game():
                             gkey=gkey,
                             coordinates=coordinates)
 
-@app.route('/game-page/puzzle-key')
+@app.route('/puzzle-key')
 def get_game_puzzle_key():
 
     game_id = request.args.get('game_id')
 
     game_info = db.session.query(GameInfo.puzzle_key).filter(GameInfo.game_id == game_id).all()
 
-    print(game_info)
-
     results = [ t[0] for t in game_info ]
-
-    print(results)
 
     return jsonify(results)
 
 
+@app.route('/record-game')
+def record_game_completed():
+    # Get game ID from game.html
+    game_id = request.args.get('game_id')
 
+    # Get user ID from session
+    user_id = session['active_session']
+
+    # Query to see if player and game are already in player database
+    player_game_record = db.session.query(Player).filter(Player.user_id == user_id, Player.games_played == game_id).first()
+    print(player_game_record)
+
+    # If statement to add if record doesn't exist, flash message if already in database
+    if player_game_record is None:
+        alert_mssg = 'Congrats on solving this game!'
+
+        record_game = Player(user_id=user_id, games_played=game_id)
+        db.session.add(record_game)
+        db.session.commit()
+    else:
+        alert_mssg = 'Congrats on solving this game again!'
+
+    return jsonify(alert_mssg)
 
 if __name__ == "__main__":
     app.debug = True
