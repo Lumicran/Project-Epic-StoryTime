@@ -1,23 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}Greeting Page{% endblock %}
-
 {% block content %}
 
-{% if 'active_session' in session %}
+<!-- {% if 'active_session' in session %}
     <h2>Logout</h2>
     <p><a href="/logout">Click here to log out</a></p>
 {% else %}
     <h2>Login</h2>
     <p><a href="/login">Click here to log in</a></p>
-{% endif %}
+{% endif %} -->
 
     <body>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-3">
-                    User: {{ username }} <br>
-                    _________ <br>
+                    <p class="white-text default-header info-font">User: {{ username }}</p> <br>
+<!--                     _________ <br>
                     |      <br>
                     |      <br>
                     |      <br>
@@ -26,11 +24,11 @@
                     Player Stats: <br>
 
                     *Games Played* <br>
-                    -Rank # <br>
+                    -Rank # <br> -->
                 </div>
 
-                <div class="col-4">
-                    Available Games to Play:<br>
+                <div class="col-9">
+                    <p class="white-text default-header info-font">Available Games to Play:</p>
                         <ul>
                             {% for game in all_games %}
                                 <li>
@@ -45,5 +43,5 @@
         </div>
     </body>
 
-
+  <body class='main-background'></body>
 {% endblock %}

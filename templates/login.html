@@ -23,16 +23,31 @@
 </form><br>
 
 <form action="/update-password" method="POST">
+  
     <button type="button" class="btn btn-primary" onclick="prompt_security()">Reset Password</button>
-    <p class='hidden' id="security_question"></p>    
-    <input type='text' class='hidden' id="answer">
-    <input type="submit" onclick="check_answer()" class='hidden' id="check_security" value="Check Response"><br>
+
+    <p class='hidden' id="security_question"></p>  
+
+  <div class="form-row">  
+    <div class="form-group col-md-5">
+      <input type="text" class="form-control hidden" id="answer" name="answer" placeholder="When lions roared to greet the sunrise.">
+    </div>
+  </div>
+
+    <button type="submit" onclick="check_answer()" class="hidden btn btn-primary" id="check_security" value="Check Response">Submit</button> 
     
     <input type='text' class='hidden' name='user_email' id='pass_email'><br>
 
     <p class='hidden' id='hidden_text'> New Password:</p>
-        <input type='text' class='hidden' name='new_password' id='new_password'><br>
+
+  <div class="form-row">  
+    <div class="form-group col-md-5">
+      <input type="password" class="form-control hidden" id="new_password" name="new_password" placeholder="******">
+    </div>
+  </div>
+
     <input type='submit' onclick='update_email()' class='hidden' id='password_submit'>
+  </div>  
 </form>
 
 
@@ -55,9 +70,9 @@
 
             // Code to unhide text box for input & submit button
             let user_answer = document.getElementById("answer");
-            user_answer.setAttribute('class', 'hint');
+            user_answer.setAttribute('class', 'hint form-control');
             let submit_button = document.getElementById("check_security");
-            submit_button.setAttribute('class', 'hint');
+            submit_button.setAttribute('class', 'hint btn btn-primary');
         })
     }
 
@@ -71,13 +86,13 @@
             alert("Congrats! Your security response matched what was in the database.")
 
             let reveal_text = document.getElementById("hidden_text");
-            reveal_text.setAttribute('class', 'hint');
+            reveal_text.setAttribute('class', 'hint white-text');
 
             let password_input = document.getElementById("new_password");
-            password_input.setAttribute('class', 'hint');
+            password_input.setAttribute('class', 'hint form-control');
 
             let pssd_submit = document.getElementById("password_submit");
-            pssd_submit.setAttribute('class', 'hint');
+            pssd_submit.setAttribute('class', 'hint btn btn-primary');
 
         }  else {
             alert("Sorry, " + "'" + user_input + "'" + " was not found in our database.")

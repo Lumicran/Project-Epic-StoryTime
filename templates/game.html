@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}<h1>Game Page</h1>{% endblock %}
-
 {% block content %}
 
-<p>Current Game: (Game # {{ game_id }}) {{ game_name }}: {{ game_description }}</p>
+<p class="white-text">Current Game: (Game ID # {{ game_id }}) {{ game_name }}: {{ game_description }}</p>
 
 <div id='map'></div><br>
 
@@ -13,8 +11,8 @@
             {% if loop.index == 1 %}
 
                 <form class='current' id='event{{ loop.index }}'>
-                    Event # ({{ game.event_order }}) {{ game.story_text }}<br>
-                    Puzzle: {{ game.puzzle }}<br>
+                    <p class="white-text">Event # ({{ game.event_order }}) {{ game.story_text }}</p>
+                    <p class="white-text">Puzzle: {{ game.puzzle }}</p>
                     <input type='text' name='puzzle_response' id='response{{ loop.index }}'>
                     <input type='submit' value='Submit' onclick='getResponse()'><br>
                     <p class='hidden' id='hint{{ loop.index }}'>Hint: {{ game.puzzle_hint }}</p>
@@ -32,10 +30,6 @@
             {% endif %}
         {% endfor %}
 </ul>
-
-<a href="/main-page">Return to main page</a>
-
-
 
 <script>
 
@@ -203,5 +197,6 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ gkey }}&callback=initMap" async defer></script>
 
+  <body class='main-background'></body>
 {% endblock %}
 

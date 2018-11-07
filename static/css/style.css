@@ -18,6 +18,10 @@
     font-family: 'Pattaya', sans-serif;    
 }
 
+.info-font {
+    font-size: 2em;
+}
+
 .front-page {
     background: url(/static/img/hidden-bookcase.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
