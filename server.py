@@ -147,11 +147,11 @@ def main_page():
     all_games = db.session.query(Game).all()
 
     #This query receives a list of game id's that a user has created.
-    #user_created_games = db.session.query(GameMaster.created_games).filter(GameMaster.user_id == session["active_session"]).all()
+    # user_created_games = db.session.query(GameMaster.created_games).filter(GameMaster.user_id == session["active_session"]).all()
 
     # games_created = []
 
-    # for game_id in user_created_games:
+    # for game_id in all_games:
     #     game = db.session.query(Game).filter(Game.game_id == game_id)
     #     games_created.append(game.game_name)
     #     print(games_created)
@@ -162,9 +162,8 @@ def main_page():
     # This query pulls all the games players have played, along with their user_id (which we can use to pull user_id & usernames)
     # leaderboard_stats = db.session.query(Player.user_id, User.username, Player.games_played).join(User).all()
 
-    leaderboard_stats = db.session.query(Player.user_id, User.username, Player.games_played, Games.).join(User).all()  
-    print(leaderboard_stats)
-    print("\n")
+    # leaderboard_stats = db.session.query(Player.user_id, User.username, Player.games_played, Games.game_name).join(User).all()  
+
 
     # leaderboard_dict = {}
 
@@ -181,9 +180,9 @@ def main_page():
 
     return render_template("mainpage.html",
                             all_games=all_games,
-                            username = user_deets.username,
+                            username = user_deets.username)
                             # user_games = user_created_games,
-                            leaderboard_stats=leaderboard_stats)
+                            # leaderboard_stats=leaderboard_stats)
 
 # @app.route('/create-game')
 # def create_game_page():

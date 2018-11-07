@@ -1,19 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
 
-<h1>Welcome Back!</h1>
+<h1 class='default-header white-text'>Welcome Back!</h1>
 
 <form action="/login-check" method="POST">
-    Email: <input type='text' name='user_email' id='email'><br>
-    Password: <input type='password' name='user_password'>
-    <input type='submit'><br>
-</form>
+  <div class="form-row">
+    <div class="form-group col-md-5">
+      <label for="email" class='white-text'>Email</label>
+      <input type="text" class="form-control" id="email" name='user_email' placeholder="fireNation@gmail.com">
+    </div>
+
+    <div class="form-group col-md-5">
+      <label for="password" class='white-text'>Password</label>
+      <input type="password" class="form-control" id="password" name="user_password" placeholder="******">
+    </div>
+  </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>    
+</form><br>
 
 <form action="/update-password" method="POST">
-    <button type="button" onclick="prompt_security()">Reset Password</button>
+    <button type="button" class="btn btn-primary" onclick="prompt_security()">Reset Password</button>
     <p class='hidden' id="security_question"></p>    
     <input type='text' class='hidden' id="answer">
     <input type="submit" onclick="check_answer()" class='hidden' id="check_security" value="Check Response"><br>
@@ -40,7 +50,7 @@
 
             // Code to unhide security question
             let security_reveal = document.getElementById("security_question");
-            security_reveal.setAttribute('class', 'hint');
+            security_reveal.setAttribute('class', 'hint white-text');
             security_reveal.innerHTML = security_question;
 
             // Code to unhide text box for input & submit button
@@ -82,5 +92,7 @@
     }
 
 </script>
+
+  <body class='main-background'></body>
 
 {% endblock %}
