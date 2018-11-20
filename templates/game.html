@@ -116,7 +116,7 @@
                 changeEvent();
             } else {
                 let hint = document.getElementById("hint" + counter);
-                hint.setAttribute('class', 'hint');                
+                hint.setAttribute('class', 'hint white-text');                
             }
 
         }
@@ -128,7 +128,7 @@
             puzzle_index += 1;
 
             let location = document.getElementById("location" + counter);
-            location.setAttribute('class', 'hint');
+            location.setAttribute('class', 'hint white-text');
 
             checkLocation();         
 
@@ -136,7 +136,7 @@
         } else {
             // If wrong, pop up hint.
             let hint = document.getElementById("hint" + counter);
-            hint.setAttribute('class', 'hint');
+            hint.setAttribute('class', 'hint white-text');
         }
     }
 
@@ -178,7 +178,7 @@
         if (counter < totalEvents) {
             // These next lines of code are to set the next event as current.
             next = document.getElementById('event'+ (counter + 1));
-            next.setAttribute('class', 'current');
+            next.setAttribute('class', 'current white-text');
 
             counter += 1;
         } else {

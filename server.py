@@ -337,13 +337,13 @@ def record_game_completed():
     return jsonify(alert_mssg)
 
 if __name__ == "__main__":
-    app.debug = False
+    app.debug = True
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app, db_uri='postgresql:///storytime')
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(port=5000, host='0.0.0.0')    

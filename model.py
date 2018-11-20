@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
     init_app()
 
-    test_data()
+    # test_data()
 
 
 
