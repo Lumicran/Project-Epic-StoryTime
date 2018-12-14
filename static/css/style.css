@@ -47,6 +47,10 @@
     padding: 1px;
 }
 
+.navbar-custom {
+    background-color: #8ACB88;
+}
+
 .white-text {
     color: white;
 }
